@@ -1,5 +1,6 @@
 package com.github.hykes.codegen.gui;
 
+import com.github.hykes.codegen.configurable.SettingManager;
 import com.github.hykes.codegen.constants.Defaults;
 import com.github.hykes.codegen.gui.cmt.MyDialogWrapper;
 import com.github.hykes.codegen.model.CodeRoot;
@@ -73,6 +74,8 @@ public class SelectGroupPanel {
         root.getGroups().forEach(it -> {
             JCheckBox groupBox = new JCheckBox(it.getName());
             groupBox.setName(it.getId());
+            String path = SettingManager.getInstance().getRunningData(it.getId());
+            //如果未选中，并且之前有数据则执行
             groupBox.addActionListener(box -> {
                 if (groupBox.isSelected()) {
                     // 选择输出路径
@@ -97,9 +100,14 @@ public class SelectGroupPanel {
                         groupBox.setSelected(false);
                     } else {
                         groupPathMap.put(groupBox.getName(), outputPath + basePackage.replace(".", "/"));
+                        SettingManager.getInstance().setRunningData(it.getId(), outputPath + basePackage.replace(".", "/"));
                     }
                 }
             });
+            if (path != null && path.length() > 2 && !groupBox.isSelected()) {
+                groupBox.setSelected(true);
+                groupPathMap.put(groupBox.getName(), path);
+            }
             groupsPanel.add(groupBox);
         });
         groupsPanel.revalidate();

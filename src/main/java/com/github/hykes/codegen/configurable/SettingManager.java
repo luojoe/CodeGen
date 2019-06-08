@@ -1,5 +1,6 @@
 package com.github.hykes.codegen.configurable;
 
+import com.github.hykes.codegen.configurable.model.RunningData;
 import com.github.hykes.codegen.configurable.model.Templates;
 import com.github.hykes.codegen.configurable.model.Variables;
 import com.github.hykes.codegen.constants.Defaults;
@@ -9,6 +10,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.util.xmlb.XmlSerializerUtil;
+import cucumber.api.java.eo.Se;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -28,9 +30,12 @@ public class SettingManager implements PersistentStateComponent<SettingManager> 
 
     private Templates templates;
 
+    private RunningData runningData;
+
     public SettingManager() {
         this.variables = new Variables();
         this.templates = new Templates();
+        this.runningData = new RunningData();
         init();
     }
 
@@ -50,6 +55,10 @@ public class SettingManager implements PersistentStateComponent<SettingManager> 
         }
         if (variables != null && StringUtils.isBlank(variables.getIgnoreFields())) {
             variables.setIgnoreFields("id,created_at,updated_at");
+        }
+        if (runningData != null) {
+            System.out.println(runningData.getRunningData().entrySet());
+            System.out.println(runningData.getRunningData().entrySet().size());
         }
     }
 
@@ -76,4 +85,17 @@ public class SettingManager implements PersistentStateComponent<SettingManager> 
         this.templates = templates;
     }
 
+    public RunningData getRunningData() {
+        return runningData;
+    }
+    public String getRunningData(String key) {
+        return runningData.getRunningData(key);
+    }
+
+    public void setRunningData(RunningData runningData) {
+        this.runningData = runningData;
+    }
+    public void setRunningData(String key,String value) {
+        this.runningData.setRunningData(key,value);
+    }
 }

@@ -1,5 +1,6 @@
 package com.github.hykes.codegen.gui;
 
+import com.github.hykes.codegen.configurable.SettingManager;
 import com.github.hykes.codegen.utils.StringUtils;
 import com.intellij.ide.util.PackageChooserDialog;
 import com.intellij.openapi.fileChooser.FileChooser;
@@ -127,6 +128,8 @@ public class SelectPathDialog extends JDialog implements ActionOperator {
     public void ok() {
         outputPath = outPutText.getText();
         basePackage = packageText.getText();
+        System.out.println("outputPath==========="+outputPath);
+        System.out.println("basePackage==========="+basePackage);
         setVisible(false);
     }
 
