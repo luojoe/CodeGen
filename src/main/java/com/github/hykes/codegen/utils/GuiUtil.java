@@ -26,7 +26,10 @@ import java.util.stream.Collectors;
  * Desc: GUI utils
  */
 public class GuiUtil {
-
+    /**
+     * 本次生成的时候，有重复的文件时，是否一直覆盖
+     */
+    public static boolean isDeleteExistAlways = false;
     /**
      * Get all checkbox values
      */

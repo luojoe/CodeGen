@@ -2,6 +2,7 @@ package com.github.hykes.codegen.provider;
 
 import com.github.hykes.codegen.model.CodeContext;
 import com.github.hykes.codegen.model.CodeTemplate;
+import com.github.hykes.codegen.utils.GuiUtil;
 import com.github.hykes.codegen.utils.StringUtils;
 import com.intellij.openapi.fileTypes.FileType;
 import com.intellij.openapi.project.Project;
@@ -13,6 +14,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.psi.codeStyle.JavaCodeStyleManager;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.Map;
 import java.util.Objects;
 
@@ -102,6 +104,25 @@ public abstract class AbstractFileProvider {
             styleManager.shortenClassReferences(psiFile);
         }
         // TODO: 加入覆盖判断
+        PsiFile existFile = psiDirectory.findFile(fileName);
+        if (existFile != null) {
+            //如果删除已存在的
+            if (GuiUtil.isDeleteExistAlways) {
+                existFile.delete();
+            } else {
+                Object[] options = {"YES", "NO", "YES TO ALL"};
+                int isDelete = JOptionPane.showOptionDialog(null, existFile.getName()+" : isExist,Is Over It ?", "Warning", JOptionPane.YES_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                //取消
+                if (isDelete == 1) {
+                    return psiFile;
+                }
+                //全部覆盖
+                if (isDelete == 2) {
+                    GuiUtil.isDeleteExistAlways = true;
+                }
+                existFile.delete();
+            }
+        }
         psiDirectory.add(psiFile);
         return psiFile;
     }
